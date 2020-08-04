@@ -1,0 +1,12 @@
+# exclude everything
+*.esp
+*.pex
+meshes
+textures
+*.rar
+meta.ini
+# exception to the rule
+!Civil War Overhaul.esp
+!LICENSE.md
+!.gitignore
+!README.md
