@@ -1,6 +1,9 @@
 # exclude everything
 *.esp
 *.pex
+*.ppj
+*.vscode
+*.code-workspace
 meshes
 textures
 *.rar
