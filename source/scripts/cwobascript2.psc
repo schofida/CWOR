@@ -61,8 +61,6 @@ function RemoveFromAllFactions(actor Me)
 	Me.RemoveFromFaction(CWImperialFaction)
 	Me.RemoveFromFaction(ImperialCrimeFaction)
 	Me.RemoveFromFaction(CWSoldierNoGuardDialogueFaction)
-	Me.RemoveFromFaction(CrimeFactionHaafingar)
-	Me.RemoveFromFaction(CrimeFactionEastmarch)
 endFunction
 
 event OnInit()
@@ -82,7 +80,7 @@ event OnInit()
 		Myself.AddToFaction(CWImperialFaction)
 		Myself.AddToFaction(ImperialCrimeFaction)
 		Myself.AddToFaction(CWSoldierNoGuardDialogueFaction)
-		Myself.AddToFaction(CrimeFactionHaafingar)
+		;Myself.AddToFaction(CrimeFactionHaafingar)	;schofida - Remove crime for attacking
 		Myself.GetLeveledActorBase().SetName("Imperial Spy")
 	elseIf Myself.IsInFaction(ImperialFaction)
 		self.RemoveFromAllFactions(Myself)
@@ -93,7 +91,7 @@ event OnInit()
 		Myself.AddToFaction(CWSonsFaction)
 		Myself.AddToFaction(SonsCrimeFaction)
 		Myself.AddToFaction(CWSoldierNoGuardDialogueFaction)
-		Myself.AddToFaction(CrimeFactionEastmarch)
+		;Myself.AddToFaction(CrimeFactionEastmarch)	;schofida - Remove crime for attacking
 		Myself.GetLeveledActorBase().SetName("Stormcloak Spy")
 	endIf
 	Myself.EvaluatePackage()
