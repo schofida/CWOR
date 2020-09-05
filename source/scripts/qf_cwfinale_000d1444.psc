@@ -627,6 +627,9 @@ endIf ;CWO Stuff
 
 kmyquest.CWs.CWFin.Start()   ;start the post questline dialogue quest
 
+kmyQuest.CWs.CWODontRunQuests.setValueInt(1) ;schofida - War is over. If creatmissions is triggered. Dont run
+kmyQuest.CWs.CWOHijackYes.setValueInt(0) ;schofida - War is over. Setting this to 0 forces the CWOCreateMissions in cwscript (why 0, I dont know). Since CWODontRunQuests, is 1 it will bail out immediately
+
 ;UNLOCK THE DOORS
 kmyquest.unlockDoors()
 Alias_MainGateInterior.GetReference().Lock(False)
@@ -665,8 +668,6 @@ if kmyQuest.CWs.CWOStillABetterEndingGlobal.GetValueInt() == 1
 	kmyQuest.CWs.PlayerFaction.SetEnemy(kmyQuest.CWs.CWImperialFactionNPC, true, true)
 	kmyQuest.CWs.PlayerFaction.SetEnemy(kmyQuest.CWs.CWSonsFactionNPC, true, true)
 	kmyQuest.CWs.CWODisguiseGlobal.SetValueInt(0)
-	kmyQuest.CWs.PlayerRef.RemoveFromFaction(kmyQuest.CWs.CWImperialFactionNPC)
-	kmyQuest.CWs.PlayerRef.RemoveFromFaction(kmyQuest.CWs.CWSonsFactionNPC)
 	;if kmyQuest.CWs.PlayerRef.IsInFaction(kmyQuest.CWs.CWSonsFactionNPC)
 	;	kmyQuest.CWs.CWOImperialsWin()
 	;else
