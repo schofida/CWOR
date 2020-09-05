@@ -23,7 +23,7 @@ Event OnTriggerEnter(ObjectReference akActionRef)
 	endif
 	
 	; fix OCW 2.3.3
-	if !(GalmarRef.IsInFaction(CWImperialFaction) || RalofRef.IsInFaction(CWImperialFaction))
+	if !(GalmarRef.IsInFaction(CWImperialFaction) || RalofRef.IsInFaction(CWImperialFaction)) || CWs.playerAllegiance == CWs.iImperials
 		return
 	endIf
 	

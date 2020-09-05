@@ -2143,15 +2143,6 @@ kmyQuest.CWOArmorDisguises.stop()
 ;schofida - Undo Disguise quest values
 kmyQuest.CWs.PlayerFaction.SetEnemy(kmyQuest.CWs.getPlayerAllegianceEnemyFaction(true), false, false)
 kmyQuest.CWs.CWODisguiseGlobal.SetValueInt(0)
-if kmyQuest.CWs.CWOStillABetterEndingGlobal.GetValueInt() == 0
-	if kmyQuest.CWs.Playerallegiance == kmyQuest.CWs.iImperials
-		game.GetPlayer().Addtofaction(kmyQuest.CWs.CWImperialFactionNPC)
-		game.GetPlayer().RemoveFromFaction(kmyQuest.CWs.CWSonsFactionNPC)
-	elseIf kmyQuest.CWs.Playerallegiance == kmyQuest.CWs.iSons
-		game.GetPlayer().Addtofaction(kmyQuest.CWs.CWSonsFactionNPC)
-		game.GetPlayer().RemoveFromFaction(kmyQuest.CWs.CWImperialFactionNPC)
-	endIf
-endIf
 ;CWO Stuff
 
 ;Player gets quest from quest giver

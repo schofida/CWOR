@@ -252,10 +252,10 @@ function OnPageReset(String a_page)
 		if CW.IsRunning()
 			CDOSlider11 = self.AddtextOption("Main CW Quest", "Is On Stage " + CW.Getstage() as String, 0)
 		endIf
-		if game.Getplayer().IsInFaction(CWSonsFactionNPC)
-			CDOSlider13 = self.AddtextOption("We are", "In The Sons NPC Faction", 0)
-		elseIf game.Getplayer().IsInFaction(CWImperialFactionNPC)
-			CDOSlider13 = self.AddtextOption("We are", "In the Imperial NPC Faction", 0)
+		if game.Getplayer().IsInFaction(CWS.CWSonsFaction)
+			CDOSlider13 = self.AddtextOption("We are", "In The Sons Faction", 0)
+		elseIf game.Getplayer().IsInFaction(CWS.CWImperialFaction)
+			CDOSlider13 = self.AddtextOption("We are", "In the Imperial Faction", 0)
 		else
 			CDOSlider13 = self.AddtextOption("We are", "Not Yet Hostile", 0)
 		endIf

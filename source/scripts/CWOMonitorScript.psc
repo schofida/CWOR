@@ -30,7 +30,16 @@ function OnPlayerLoadGame()
 endfunction
 
 function DoPlayerLoadGameStuff()
+	Utility.Wait(10)
 	(CWS as CWScript).debugOn.setValue(0)
+	if CWOVersion.GetValueInt() < 302
+		CWS.playerRef.RemoveFromFaction(CWs.CWSonsFactionNPC)
+		CWS.playerRef.RemoveFromFaction(CWs.CWImperialFactionNPC)
+		if CWs.playerAllegiance == CWs.iImperials && CWs.WhiterunSiegeFinished
+			CWS.playerRef.AddToFaction(CWs.CWImperialFaction)
+		endif
+		CWOVersion.SetValueInt(302)
+	endif
 endfunction
 
 ; Skipped compiler generated GetState
