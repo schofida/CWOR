@@ -33,7 +33,7 @@ Bool wasImperial
 ; Reddit BugFix #8
 function EquipmentUpdate()
 	WhatArmor = PlayerRef.GetWornForm(4)
-	if PlayerRef.IsInFaction(CWSonsFactionNPC) && PeaceTreaty == false
+	if (CWFinale as cwfinalescript).CWs.playerAllegiance == (CWFinale as cwfinalescript).CWs.iSons && PeaceTreaty == false
 		if WhatArmor.HasKeyword(ImperialKeyword) || WhatArmor.HasKeyword(ImperialKeyword2) || WhatArmor.HasKeyword(ImperialKeyword3)
 			CWODisguiseGlobal.SetValueInt(1)
 			PlayerFaction.SetAlly(CWImperialFactionNPC, false, false)
@@ -41,7 +41,7 @@ function EquipmentUpdate()
 			CWODisguiseGlobal.SetValueInt(0)
 			PlayerFaction.SetEnemy(CWImperialFactionNPC, false, false)
 		endIf
-	elseIf PlayerRef.IsInFaction(CWImperialFactionNPC) && PeaceTreaty == false
+	elseIf (CWFinale as cwfinalescript).CWs.playerAllegiance == (CWFinale as cwfinalescript).CWs.iImperials && PeaceTreaty == false
 		if WhatArmor.HasKeyword(SonsKeyword) || WhatArmor.HasKeyword(SonsKeyword2)
 			PlayerFaction.SetAlly(CWSonsFactionNPC, false, false)
 			CWODisguiseGlobal.SetValueInt(1)
@@ -92,9 +92,9 @@ endFunction
 
 faction function ReturnEnemyFaction()
 
-	if PlayerRef.IsInFaction(CWSonsFactionNPC)
+	if (CWFinale as cwfinalescript).CWs.playerAllegiance == (CWFinale as cwfinalescript).CWs.iSons
 		return CWImperialFactionNPC
-	elseIf PlayerRef.IsInFaction(CWImperialFactionNPC)
+	elseIf (CWFinale as cwfinalescript).CWs.playerAllegiance == (CWFinale as cwfinalescript).CWs.iImperials
 		return CWSonsFactionNPC
 	endIf
 endFunction
