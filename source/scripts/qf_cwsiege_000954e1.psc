@@ -2236,6 +2236,7 @@ endIf
 Alias_BattleCenterMarker.GetReference().Enable(false)
 
 if kmyQuest.IsAttack()
+	kmyQuest.CWOAttack = true
 	((self as Quest) as cwreinforcementcontrollerscript).ShowAttackerPoolObjective = false		;we don't want to show Destroy Attackers XX% Remaining
 	((self as Quest) as cwreinforcementcontrollerscript).ShowDefenderPoolObjective = false
 else
@@ -3164,7 +3165,7 @@ Alias_Defender10.TryToEvaluatePackage()
 
 ;**ATTACK/DEFEND SPECIFIC
 if kmyQuest.IsAttack()
-	
+	kmyQuest.CWOAttack = true
 endIf
 
 ;**CITY SPECIFIC:
@@ -3717,6 +3718,7 @@ kmyQuest.CWOWarBegun.setvalueint(1)
 
 ;**ATTACK/DEFEND SPECIFIC
 if kmyQuest.IsAttack()
+	kmyQuest.CWOAttack = true
 	kmyQuest.CWSiegeObj.SetObjectiveCompleted(1000, 1 as Bool); COMPLETED - Meet with General
 	;kmyquest.CWAttackerStartingScene.Stop()
 else
@@ -3901,7 +3903,7 @@ Alias_AttackerSonsReinforceEnabler.GetReference().Disable(false)
 
 ;**ATTACK/DEFEND SPECIFIC
 if kmyQuest.IsAttack()
-	
+	kmyQuest.CWOAttack = true
 endIf
 
 ;**CITY SPECIFIC:
@@ -4278,9 +4280,9 @@ if cityVar == kmyQuest.CWs.WhiterunLocation
 		Alias_Defender10.TryToDisable()
 	endIf
 elseIf cityVar == kmyQuest.CWs.MarkarthLocation
-	
+
 elseIf cityVar == kmyQuest.CWs.RiftenLocation
-	
+
 elseIf cityVar == kmyQuest.CWs.SolitudeLocation
 	Alias_MainGateInterior.GetReference().Lock(True)
 	Alias_MainGateInterior.GetReference().SetLockLevel(255)
