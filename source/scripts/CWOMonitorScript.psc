@@ -40,6 +40,12 @@ function DoPlayerLoadGameStuff()
 		endif
 		CWOVersion.SetValueInt(302)
 	endif
+	if CWOVersion.GetValueInt() < 304
+		if !CWs.WhiterunSiegeFinished
+			CWS.CWOCurrentHold.SetValueInt(4)
+		endif
+		CWOVersion.SetValueInt(304)
+	endif
 endfunction
 
 ; Skipped compiler generated GetState
