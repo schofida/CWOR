@@ -4280,9 +4280,51 @@ if cityVar == kmyQuest.CWs.WhiterunLocation
 		Alias_Defender10.TryToDisable()
 	endIf
 elseIf cityVar == kmyQuest.CWs.MarkarthLocation
-
+	if kmyQuest.CWOAttack == true
+		Alias_Attacker1General.TryToDisable()
+		Alias_Attacker2.TryToDisable()
+		Alias_Attacker3.TryToDisable()
+		Alias_Attacker4.TryToDisable()
+		Alias_Attacker5.TryToDisable()
+		Alias_Attacker6.TryToDisable()
+		Alias_Attacker7.TryToDisable()
+		Alias_Attacker8.TryToDisable()
+		Alias_Attacker9.TryToDisable()
+		Alias_Attacker10.TryToDisable()
+		Alias_Defender1General.TryToDisable()
+		Alias_Defender2.TryToDisable()
+		Alias_Defender3.TryToDisable()
+		Alias_Defender4.TryToDisable()
+		Alias_Defender5.TryToDisable()
+		Alias_Defender6.TryToDisable()
+		Alias_Defender7.TryToDisable()
+		Alias_Defender8.TryToDisable()
+		Alias_Defender9.TryToDisable()
+		Alias_Defender10.TryToDisable()
+	endIf
 elseIf cityVar == kmyQuest.CWs.RiftenLocation
-
+	if kmyQuest.CWOAttack == true
+		Alias_Attacker1General.TryToDisable()
+		Alias_Attacker2.TryToDisable()
+		Alias_Attacker3.TryToDisable()
+		Alias_Attacker4.TryToDisable()
+		Alias_Attacker5.TryToDisable()
+		Alias_Attacker6.TryToDisable()
+		Alias_Attacker7.TryToDisable()
+		Alias_Attacker8.TryToDisable()
+		Alias_Attacker9.TryToDisable()
+		Alias_Attacker10.TryToDisable()
+		Alias_Defender1General.TryToDisable()
+		Alias_Defender2.TryToDisable()
+		Alias_Defender3.TryToDisable()
+		Alias_Defender4.TryToDisable()
+		Alias_Defender5.TryToDisable()
+		Alias_Defender6.TryToDisable()
+		Alias_Defender7.TryToDisable()
+		Alias_Defender8.TryToDisable()
+		Alias_Defender9.TryToDisable()
+		Alias_Defender10.TryToDisable()
+	endIf
 elseIf cityVar == kmyQuest.CWs.SolitudeLocation
 	Alias_MainGateInterior.GetReference().Lock(True)
 	Alias_MainGateInterior.GetReference().SetLockLevel(255)
