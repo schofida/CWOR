@@ -2239,11 +2239,13 @@ if kmyQuest.IsAttack()
 	kmyQuest.CWOAttack = true
 	((self as Quest) as cwreinforcementcontrollerscript).ShowAttackerPoolObjective = false		;we don't want to show Destroy Attackers XX% Remaining
 	((self as Quest) as cwreinforcementcontrollerscript).ShowDefenderPoolObjective = false
+	((self as Quest) as cwreinforcementcontrollerscript).StageToSetIfDefenderWipedOut = 100
 else
 	((self as Quest) as cwreinforcementcontrollerscript).ShowAttackerPoolObjective = true		;we DO want to show Destroy Attackers XX% Remaining
 	;Reddit Bugfix #2
 	((self as Quest) as cwreinforcementcontrollerscript).ShowDefenderPoolObjective = true
 	;Reddit Bugfix #2
+	((self as Quest) as cwreinforcementcontrollerscript).StageToSetIfDefenderWipedOut = 50
 endIf
 
 CWScript.Log("CWSiegeQuestFragmentScript", self + "Calling TryToTurnOnCatapultAlias() on Catapult aliases")	
@@ -4068,7 +4070,12 @@ CWSiegeScript kmyQuest = __temp as CWSiegeScript
 CWScript.Log("CWSiegeQuestFragmentScript", self + "Stage 200")	;*** WRITE TO LOG
 
 ;CWO Stuff
+if kmyQuest.CWOFailure == 1
+	CWScript.Log("CWSiegeQuestFragmentScript", self + "Siege Failed from a different stage. Bailing out!")	;*** WRITE TO LOG
+	return
+endif
 if kmyQuest.CWOAttack == true
+	CWScript.Log("CWSiegeQuestFragmentScript", self + "Attackers ran out of respawn tickets and too many died")	;*** WRITE TO LOG
 	kmyQuest.CWs.CWODefendingActive.value = 1 as Float
 	kmyQuest.CWOFailure = 1
 endIf
