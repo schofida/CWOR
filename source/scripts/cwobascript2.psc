@@ -1,67 +1,50 @@
 scriptName CWOBAScript2 extends ReferenceAlias
 
 ;-- Properties --------------------------------------
-faction property CWSonsFaction auto
-faction property CrimeFactionReach auto
-faction property SonsCrimeFaction auto
-faction property ImperialCrimeFaction auto
+faction property FactionToAdd auto
+faction property NPCFactionToAdd auto
 faction property CWSoldierNoGuardDialogueFaction auto
-faction property CrimeFactionRift auto
-faction property ImperialFaction auto
-faction property CrimeFactionEastmarch auto
-faction property CrimeFactionHjaalmarch auto
-faction property CrimeFactionSons auto
-faction property CWImperialFaction auto
-faction property CrimeFactionImperial auto
-faction property CrimeFactionWhiterun auto
-faction property CrimeFactionFalkreath auto
-faction property CrimeFactionPale auto
-faction property SonsFaction auto
-faction property CrimeFactionHaafingar auto
-faction property CrimeFactionWinterhold auto
 
 ;-- Variables ---------------------------------------
 
 ;-- Functions ---------------------------------------
 Faction[] ActorFactions	; Reddit BugFix #9
+Bool IsSwapped = false
 
 ; Skipped compiler generated GotoState
 
 ; Skipped compiler generated GetState
 ; Reddit BugFix #9
+
+
+
 event OnDeath(Actor akKiller)
+	RevertFactions()
+endEvent
+
+function RemoveFromAllFactions(actor Me)
+	Faction[] currentFactions = Me.GetFactions(-128, 127)
+	int i = currentFactions.length
+	While i
+		i -= 1
+		me.RemoveFromFaction(currentFactions[i])
+	endwhile
+endfunction
+
+function RevertFactions()
 	actor Myself = self.GetActorReference()
+	if Myself == none || IsSwapped == false
+		return
+	endif
+	IsSwapped = false
 	RemoveFromAllFactions(Myself)
 	int i = ActorFactions.length
 	While i
 		i -= 1
-		if Myself.IsInFaction(SonsFaction) == false
-			Myself.AddToFaction(ActorFactions[i])
-		endif
+		Myself.AddToFaction(ActorFactions[i])
 	endwhile
 	Myself.EvaluatePackage()
-endEvent
-
-function RemoveFromAllFactions(actor Me)
-
-	Me.RemoveFromFaction(CrimeFactionFalkreath)
-	Me.RemoveFromFaction(CrimeFactionRift)
-	Me.RemoveFromFaction(CrimeFactionHjaalmarch)
-	Me.RemoveFromFaction(CrimeFactionHaafingar)
-	Me.RemoveFromFaction(CrimeFactionEastmarch)
-	Me.RemoveFromFaction(CrimeFactionPale)
-	Me.RemoveFromFaction(CrimeFactionWinterhold)
-	Me.RemoveFromFaction(CrimeFactionReach)
-	Me.RemoveFromFaction(CrimeFactionWhiterun)
-	; Reddit BugFix #9
-	Me.RemoveFromFaction(SonsFaction)
-	Me.RemoveFromFaction(CWSonsFaction)
-	Me.RemoveFromFaction(SonsCrimeFaction)
-	Me.RemoveFromFaction(ImperialFaction)
-	Me.RemoveFromFaction(CWImperialFaction)
-	Me.RemoveFromFaction(ImperialCrimeFaction)
-	Me.RemoveFromFaction(CWSoldierNoGuardDialogueFaction)
-endFunction
+endfunction
 
 event OnInit()
 
@@ -69,30 +52,11 @@ event OnInit()
 	if Myself == none
 		return
 	endif
-	
 	ActorFactions = Myself.GetFactions(-128, 127)	; Reddit BugFix #9
-	if Myself.IsInFaction(SonsFaction)
-		self.RemoveFromAllFactions(Myself)
-		; Myself.RemoveFromFaction(SonsFaction)		; Reddit BugFix #9
-		; Myself.RemoveFromFaction(CWSonsFaction)	; Reddit BugFix #9
-		; Myself.RemoveFromFaction(SonsCrimeFaction)	; Reddit BugFix #9
-		Myself.AddToFaction(ImperialFaction)
-		Myself.AddToFaction(CWImperialFaction)
-		Myself.AddToFaction(ImperialCrimeFaction)
-		Myself.AddToFaction(CWSoldierNoGuardDialogueFaction)
-		;Myself.AddToFaction(CrimeFactionHaafingar)	;schofida - Remove crime for attacking
-		Myself.GetLeveledActorBase().SetName("Imperial Spy")
-	elseIf Myself.IsInFaction(ImperialFaction)
-		self.RemoveFromAllFactions(Myself)
-		; Myself.RemoveFromFaction(ImperialFaction)	; Reddit BugFix #9
-		; Myself.RemoveFromFaction(CWImperialFaction)	; Reddit BugFix #9
-		; Myself.RemoveFromFaction(ImperialCrimeFaction); Reddit BugFix #9
-		Myself.AddToFaction(SonsFaction)
-		Myself.AddToFaction(CWSonsFaction)
-		Myself.AddToFaction(SonsCrimeFaction)
-		Myself.AddToFaction(CWSoldierNoGuardDialogueFaction)
-		;Myself.AddToFaction(CrimeFactionEastmarch)	;schofida - Remove crime for attacking
-		Myself.GetLeveledActorBase().SetName("Stormcloak Spy")
-	endIf
+	RemoveFromAllFactions(Myself)
+	Myself.AddToFaction(FactionToAdd)
+	Myself.AddToFaction(NPCFactionToAdd)
+	Myself.AddToFaction(CWSoldierNoGuardDialogueFaction)
+	IsSwapped = true
 	Myself.EvaluatePackage()
 endEvent
