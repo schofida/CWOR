@@ -1599,7 +1599,7 @@ CWFortSiegeScript kmyQuest = __temp as CWFortSiegeScript
 ;END AUTOCAST
 ;BEGIN CODE
 if ((self as Quest) as cwfortsiegemissionscript).SpecialNonFortSiege == 0
-	; 	CWScript.Log("CWFortSiege", "Stage 50: setting objective displayed based on if the player is attacking or defending")
+	CWScript.Log("CWFortSiege", "Stage 50: setting objective displayed based on if the player is attacking or defending")
 	if kmyQuest.IsPlayerAttacking()
 		if kmyQuest.IsPlayerIsNearAFriendly(true)	;the player hit the trigger near his allies
 			self.SetObjectiveCompleted(10, true)
