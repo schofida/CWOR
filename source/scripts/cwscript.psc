@@ -644,7 +644,7 @@ Int property CWMission04Done auto conditional hidden
 outfit property CWSoldierSonsSoldierOutfit auto
 
 actor property PlayerRef auto
-
+globalvariable property CWOTroopPoolGameType auto
 ;-- Variables ---------------------------------------
 Int welost = 0
 
@@ -671,7 +671,7 @@ function log(string fileName, string stringToPrint, int severity = 0, bool Alway
 	
 	;print to main log
 ;	if debugMode == 1 || AlwaysPrintToMainLog
-; 		debug.trace(fileName + "-> " + stringToPrint, severity)
+;		debug.trace(fileName + "-> " + stringToPrint, severity)
 ;	EndIf
 	
 EndFunction
@@ -1786,25 +1786,33 @@ function CWOMurderMayhemScoreboard(Bool IsAttack, Int SiegeType)
 	CWScript.log("CWScript", "CWOMurderMayhemScoreboard(" + SonsReinforcements as String + ") SonsReinforcements.", 0, false, false)
 	Int ImperialReinforcements = CWOImperialReinforcements.getvalueint()
 	CWScript.log("CWScript", "CWOMurderMayhemScoreboard(" + ImperialReinforcements as String + ") ImperialReinforcements.", 0, false, false)
-	if SonsReinforcements >= ImperialReinforcements
-		SonsReinforcements -= ImperialReinforcements
-		ImperialReinforcements = 0
+	if CWOTroopPoolGameType.getValueInt() == 0
+		if SonsReinforcements >= ImperialReinforcements
+			SonsReinforcements -= ImperialReinforcements
+			ImperialReinforcements = 0
+		else
+			ImperialReinforcements -= SonsReinforcements
+			SonsReinforcements = 0
+		endIf
+		ImperialReinforcements = Math.Ceiling((ImperialReinforcements as Float) / 6.0)
+		SonsReinforcements = Math.Ceiling((SonsReinforcements as Float) / 6.0)
+		if ImperialReinforcements > 18
+			ImperialReinforcements = 18
+		elseIf ImperialReinforcements < 0
+			ImperialReinforcements = 0
+		endIf
+		if SonsReinforcements > 18
+			SonsReinforcements = 18
+		elseIf SonsReinforcements < 0
+			SonsReinforcements = 0
+		endIf
+	elseif CWOTroopPoolGameType.getValueInt() == 1
+		ImperialReinforcements = (9 - countHoldsImperial) * 2
+		SonsReinforcements = (9 - countHoldsSons) * 2
 	else
-		ImperialReinforcements -= SonsReinforcements
-		SonsReinforcements = 0
-	endIf
-	ImperialReinforcements = Math.Ceiling((ImperialReinforcements as Float) / 6.0)
-	SonsReinforcements = Math.Ceiling((SonsReinforcements as Float) / 6.0)
-	if ImperialReinforcements > 18
-		ImperialReinforcements = 18
-	elseIf ImperialReinforcements < 0
 		ImperialReinforcements = 0
-	endIf
-	if SonsReinforcements > 18
-		SonsReinforcements = 18
-	elseIf SonsReinforcements < 0
 		SonsReinforcements = 0
-	endIf
+	endif
 	if SiegeType == 0
 		ReinforcementsBase = CWOSiegeReinforcements.getvalueint()
 	elseIf SiegeType == 1
@@ -1817,20 +1825,25 @@ function CWOMurderMayhemScoreboard(Bool IsAttack, Int SiegeType)
 	CWScript.log("CWScript", "CWOMurderMayhemScoreboard(" + SonsReinforcements as String + ") SonsReinforcements after calcs.", 0, false, false)
 	CWScript.log("CWScript", "CWOMurderMayhemScoreboard(" + ImperialReinforcements as String + ") ImperialReinforcements after calcs.", 0, false, false)
 	CWScript.log("CWScript", "ReinforcementsBase(" + ReinforcementsBase as String + ") ReinforcementsBase.", 0, false, false)
+	int difficultyModifier = 2 - Utility.GetINIInt("iDifficulty:GamePlay")
+	if difficultyModifier < 0
+		difficultyModifier = 0
+	endif
+	difficultyModifier = Math.pow(4 as float, difficultyModifier as float) as int - 1
 	if IsAttack
 		if playerAllegiance == 1
-			CWOAttackerReinforcements.setValue((ImperialReinforcements - 10) as Float)
-			CWODefenderReinforcements.setValue((SonsReinforcements + 5) as Float)
+			CWOAttackerReinforcements.setValue((ImperialReinforcements - 8 + difficultyModifier) as Float)
+			CWODefenderReinforcements.setValue((SonsReinforcements + 4)  as Float)
 		else
-			CWOAttackerReinforcements.setValue((SonsReinforcements - 10) as Float)
-			CWODefenderReinforcements.setValue((ImperialReinforcements + 5) as Float)
+			CWOAttackerReinforcements.setValue((SonsReinforcements - 8 + difficultyModifier) as Float)
+			CWODefenderReinforcements.setValue((ImperialReinforcements + 4) as Float)
 		endIf
 	elseIf playerAllegiance == 1
 		CWOAttackerReinforcements.setValue(SonsReinforcements as Float)
-		CWODefenderReinforcements.setValue((ImperialReinforcements - 5) as Float)
+		CWODefenderReinforcements.setValue((ImperialReinforcements - 4 + difficultyModifier) as Float)
 	else
 		CWOAttackerReinforcements.setValue(ImperialReinforcements as Float)
-		CWODefenderReinforcements.setValue((SonsReinforcements - 5) as Float)
+		CWODefenderReinforcements.setValue((SonsReinforcements - 4 + difficultyModifier) as Float)
 	endIf
 endFunction
 

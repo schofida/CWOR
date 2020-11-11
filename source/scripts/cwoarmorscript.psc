@@ -18,6 +18,7 @@ Bool property PeaceTreaty auto
 faction property CWImperialFactionNPC auto
 
 globalvariable property CWOStillABetterEndingGlobal auto
+globalvariable property CWODisguiseGameType auto
 
 ;-- Variables ---------------------------------------
 Bool IsNowImperial
@@ -32,23 +33,48 @@ Bool wasImperial
 ;-- Functions ---------------------------------------
 ; Reddit BugFix #8
 function EquipmentUpdate()
+	if CWODisguiseGameType.GetValueInt() == 2
+		CWODisguiseGlobal.SetValueInt(1)
+		ReturnEnemyFaction().SetEnemy(PlayerFaction, true, true)
+		return
+	endif
 	WhatArmor = PlayerRef.GetWornForm(4)
 	if (CWFinale as cwfinalescript).CWs.playerAllegiance == (CWFinale as cwfinalescript).CWs.iSons && PeaceTreaty == false
-		if WhatArmor.HasKeyword(ImperialKeyword) || WhatArmor.HasKeyword(ImperialKeyword2) || WhatArmor.HasKeyword(ImperialKeyword3)
-			CWODisguiseGlobal.SetValueInt(1)
-			PlayerFaction.SetAlly(CWImperialFactionNPC, false, false)
+		if CWODisguiseGameType.GetValueInt() == 1
+			if WhatArmor.HasKeyword(SonsKeyword) || WhatArmor.HasKeyword(SonsKeyword2)
+				CWODisguiseGlobal.SetValueInt(0)
+				CWImperialFactionNPC.SetEnemy(PlayerFaction, false, false)
+			else
+				CWODisguiseGlobal.SetValueInt(1)
+				CWImperialFactionNPC.SetEnemy(PlayerFaction, true, true)
+			endIf
 		else
-			CWODisguiseGlobal.SetValueInt(0)
-			PlayerFaction.SetEnemy(CWImperialFactionNPC, false, false)
-		endIf
+			if WhatArmor.HasKeyword(ImperialKeyword) || WhatArmor.HasKeyword(ImperialKeyword2) || WhatArmor.HasKeyword(ImperialKeyword3)
+				CWODisguiseGlobal.SetValueInt(1)
+				CWImperialFactionNPC.SetEnemy(PlayerFaction, true, true)
+			else
+				CWODisguiseGlobal.SetValueInt(0)
+				CWImperialFactionNPC.SetEnemy(PlayerFaction, false, false)
+			endIf
+		endif
 	elseIf (CWFinale as cwfinalescript).CWs.playerAllegiance == (CWFinale as cwfinalescript).CWs.iImperials && PeaceTreaty == false
-		if WhatArmor.HasKeyword(SonsKeyword) || WhatArmor.HasKeyword(SonsKeyword2)
-			PlayerFaction.SetAlly(CWSonsFactionNPC, false, false)
-			CWODisguiseGlobal.SetValueInt(1)
+		if CWODisguiseGameType.GetValueInt() == 1
+			if WhatArmor.HasKeyword(ImperialKeyword) || WhatArmor.HasKeyword(ImperialKeyword2) || WhatArmor.HasKeyword(ImperialKeyword3)
+				CWODisguiseGlobal.SetValueInt(0)
+				CWSonsFactionNPC.SetEnemy(PlayerFaction, false, false)
+			else
+				CWODisguiseGlobal.SetValueInt(1)
+				CWSonsFactionNPC.SetEnemy(PlayerFaction, true, true)
+			endIf
 		else
-			PlayerFaction.SetEnemy(CWSonsFactionNPC, false, false)
-			CWODisguiseGlobal.SetValueInt(0)
-		endIf
+			if WhatArmor.HasKeyword(SonsKeyword) || WhatArmor.HasKeyword(SonsKeyword2)
+				CWSonsFactionNPC.SetEnemy(PlayerFaction, true, true)
+				CWODisguiseGlobal.SetValueInt(1)
+			else
+				CWSonsFactionNPC.SetEnemy(PlayerFaction, false, false)
+				CWODisguiseGlobal.SetValueInt(0)
+			endIf
+		endif
 	endIf
 endFunction
 ; Reddit BugFix #8
@@ -63,15 +89,13 @@ endEvent
 event OnLocationChange(Location akOldLoc, Location akNewLoc)
 	EquipmentUpdate()
 	if CWFinale.IsRunning() && CWOStillABetterEndingGlobal.GetValueInt() < 1
-		PlayerRef.RemoveFromFaction(CWImperialFactionNPC)
-		PlayerRef.RemoveFromFaction(CWSonsFactionNPC)
 		CWODisguiseGlobal.SetValueInt(0)
 		self.GetOwningQuest().Stop()
 	endIf
 	if MQ302.IsRunning()
 		if MQ302.GetStage() > 30
 			PeaceTreaty = true
-			PlayerFaction.SetAlly(self.ReturnEnemyFaction(), false, false)
+			self.ReturnEnemyFaction().SetEnemy(PlayerFaction, true, true)
 		else
 			PeaceTreaty = false
 		endIf
