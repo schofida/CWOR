@@ -3560,9 +3560,9 @@ Alias_BarricadeGeneric2.GetReference().ClearDestruction() ;Reddit bugfix #15
 cwreinforcementcontrollerscript CWReinforcementControllerS = (self as Quest) as cwreinforcementcontrollerscript
 ;CWO
 if kmyQuest.IsAttack()
-	kmyQuest.CWs.CWOMurderMayhemScoreBoard(true, 1)
+	kmyQuest.CWs.CWOMurderMayhemScoreBoard(true, 0)
 else
-	kmyQuest.CWs.CWOMurderMayhemScoreBoard(false, 1)
+	kmyQuest.CWs.CWOMurderMayhemScoreBoard(false, 0)
 endIf
 
 CWScript.Log("CWSiegeQuestFragmentScript", self + "Setting Attacker/Defender Pools")	;*** WRITE TO LOG
