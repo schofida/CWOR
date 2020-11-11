@@ -664,7 +664,6 @@ endif
  ;CWO Stuff
 if kmyQuest.CWs.CWOStillABetterEndingGlobal.GetValueInt() == 1
 	;game.GetPlayer().moveto(Alias_CWOEscapeMarker.GetReference(), 0.000000, 0.000000, 0.000000, true)
-	kmyQuest.CWs.CWSonsFactionNPC.setReaction(kmyQuest.CWs.CWImperialFactionNPC, 1)
 	kmyQuest.CWs.PlayerFaction.SetEnemy(kmyQuest.CWs.CWImperialFactionNPC, true, true)
 	kmyQuest.CWs.PlayerFaction.SetEnemy(kmyQuest.CWs.CWSonsFactionNPC, true, true)
 	kmyQuest.CWs.CWODisguiseGlobal.SetValueInt(0)
