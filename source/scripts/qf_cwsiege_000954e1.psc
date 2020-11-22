@@ -2846,7 +2846,7 @@ if kmyQuest.CWOAttack == true
 else
 	CWScript.Log("CWSiegeQuestFragmentScript", self + "Stage 50, Player is an defender, NOT setting CWBattlePhase to 0")	;*** WRITE TO LOG
 	kmyQuest.CWOFailure = 1
-	if kmyQuest.CWs.CWOStillABetterEndingGlobal.GetValueInt() < 0
+	if kmyQuest.CWs.CWOStillABetterEndingGlobal.GetValueInt() < 1
 		kmyQuest.CWs.CWODefendingActive.value = 1 as Float
 	endif
 endIf
