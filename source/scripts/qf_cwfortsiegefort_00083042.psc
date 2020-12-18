@@ -1639,15 +1639,13 @@ CWOFailure = true
 kmyQuest.CWs.CWODefendingActive.value = 1 as Float
 ;schofida - restart disguises quest
 kmyQuest.CWOArmorDisguiseS.Start()
-if CWOFailure == true
-	if CWOAttack == true
-		kmyQuest.CWs.CWODefend(CWOHoldLocation)
-		kmyQuest.CWs.failCWObj(CWOHoldLocation)
-	else
-		kmyQuest.CWs.CWODefend(CWOHoldLocation)
-		kmyQuest.CWs.failCWObj(CWOHoldLocation)
-	endIf
-endIf
+
+kmyQuest.CWs.CWODefend(CWOHoldLocation)
+kmyQuest.CWs.failCWObj(CWOHoldLocation)
+
+if !game.GetPlayer().IsInFaction(kmyQuest.CWOMission05Faction) && kmyQuest.CWs.CWMission05.IsRunning()
+	kmyQuest.CWs.CWMission05.SetStage(201)
+endif
 ;CWO
 if ((self as Quest) as cwfortsiegemissionscript).SpecialNonFortSiege == 0 && ((self as Quest) as cwfortsiegemissionscript).SpecialCapitalResolutionFortSiege == 0
 	((self as Quest) as cwfortsiegemissionscript).FlagFieldCOWithMissionResultFaction(99, true)
@@ -1671,6 +1669,7 @@ CWFortSiegeScript kmyQuest = __temp as CWFortSiegeScript
 ;CWO
 if game.GetPlayer().IsInFaction(kmyQuest.CWOMission05Faction)
 	game.GetPlayer().removefromFaction(kmyQuest.CWOMission05Faction)
+	kmyQuest.CWs.CWMission05.Stop()
 endIf
 ;CWO
 
