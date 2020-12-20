@@ -1230,6 +1230,10 @@ CWOFailure = false
 kmyQuest.CWs.CWODefendingActive.value = 0 as Float
 ;schofida; restart disguises quest
 kmyQuest.CWOArmorDisguiseS.Start()
+if game.GetPlayer().IsInFaction(kmyQuest.CWOMission05Faction)
+	game.GetPlayer().removefromFaction(kmyQuest.CWOMission05Faction)
+	kmyQuest.CWs.CWMission05.Stop()
+endIf
 ;CWO
 
 if ((self as Quest) as cwfortsiegemissionscript).SpecialNonFortSiege == 0 && ((self as Quest) as cwfortsiegemissionscript).SpecialCapitalResolutionFortSiege == 0
@@ -1645,6 +1649,9 @@ kmyQuest.CWs.failCWObj(CWOHoldLocation)
 
 if !game.GetPlayer().IsInFaction(kmyQuest.CWOMission05Faction) && kmyQuest.CWs.CWMission05.IsRunning()
 	kmyQuest.CWs.CWMission05.SetStage(201)
+elseif game.GetPlayer().IsInFaction(kmyQuest.CWOMission05Faction)
+	game.GetPlayer().removefromFaction(kmyQuest.CWOMission05Faction)
+	kmyQuest.CWs.CWMission05.Stop()
 endif
 ;CWO
 if ((self as Quest) as cwfortsiegemissionscript).SpecialNonFortSiege == 0 && ((self as Quest) as cwfortsiegemissionscript).SpecialCapitalResolutionFortSiege == 0
@@ -1665,13 +1672,6 @@ CWFortSiegeScript kmyQuest = __temp as CWFortSiegeScript
 ;END AUTOCAST
 ;BEGIN CODE
 ; CWScript.Log("CWFortSiege", "Stage 9999: Shutdown phase.")
-
-;CWO
-if game.GetPlayer().IsInFaction(kmyQuest.CWOMission05Faction)
-	game.GetPlayer().removefromFaction(kmyQuest.CWOMission05Faction)
-	kmyQuest.CWs.CWMission05.Stop()
-endIf
-;CWO
 
 if ((self as Quest) as cwfortsiegemissionscript).SpecialNonFortSiege == 0 && ((self as Quest) as cwfortsiegemissionscript).SpecialCapitalResolutionFortSiege == 0
 	((self as Quest) as cwfortsiegemissionscript).ProcessFieldCOFactionsOnQuestShutDown()
