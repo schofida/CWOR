@@ -1757,6 +1757,11 @@ ReferenceAlias Property Alias_CWODragon1 Auto
 ReferenceAlias Property Alias_CWODragon2 Auto
 ;END ALIAS PROPERTY
 
+;BEGIN ALIAS PROPERTY SmokeMarker
+;ALIAS PROPERTY TYPE ReferenceAlias
+ReferenceAlias Property Alias_SmokeMarker Auto
+;END ALIAS PROPERTY
+
 ;BEGIN FRAGMENT Fragment_6
 Function Fragment_6()
 ;BEGIN AUTOCAST TYPE CWSiegeScript

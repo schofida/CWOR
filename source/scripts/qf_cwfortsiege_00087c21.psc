@@ -219,6 +219,7 @@ referencealias property Alias_TriggerPhase4E auto
 referencealias property Alias_SpecialCityDoorExterior auto
 referencealias property Alias_Attacker4 auto
 referencealias property Alias_BarricadeNormal10 auto
+LocationAlias Property Alias_MapMarkerLocation1 Auto
 
 ;-- Variables ---------------------------------------
 

@@ -1875,6 +1875,6 @@ EndFunction
 
 ;END FRAGMENT CODE - Do not edit anything between this and the begin comment
 
-Bool CWOFailure = false
-Bool CWOAttack = false
+Bool Property CWOFailure Auto
+Bool Property CWOAttack Auto
 Location CWOHoldLocation
