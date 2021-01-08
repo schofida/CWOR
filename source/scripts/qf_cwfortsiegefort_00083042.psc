@@ -1230,10 +1230,6 @@ CWOFailure = false
 kmyQuest.CWs.CWODefendingActive.value = 0 as Float
 ;schofida; restart disguises quest
 kmyQuest.CWOArmorDisguiseS.Start()
-if game.GetPlayer().IsInFaction(kmyQuest.CWOMission05Faction)
-	game.GetPlayer().removefromFaction(kmyQuest.CWOMission05Faction)
-	kmyQuest.CWs.CWMission05.Stop()
-endIf
 ;CWO
 
 if ((self as Quest) as cwfortsiegemissionscript).SpecialNonFortSiege == 0 && ((self as Quest) as cwfortsiegemissionscript).SpecialCapitalResolutionFortSiege == 0
@@ -1646,13 +1642,6 @@ kmyQuest.CWOArmorDisguiseS.Start()
 
 kmyQuest.CWs.CWODefend(CWOHoldLocation)
 kmyQuest.CWs.failCWObj(CWOHoldLocation)
-
-if !game.GetPlayer().IsInFaction(kmyQuest.CWOMission05Faction) && kmyQuest.CWs.CWMission05.IsRunning()
-	kmyQuest.CWs.CWMission05.SetStage(201)
-elseif game.GetPlayer().IsInFaction(kmyQuest.CWOMission05Faction)
-	game.GetPlayer().removefromFaction(kmyQuest.CWOMission05Faction)
-	kmyQuest.CWs.CWMission05.Stop()
-endif
 ;CWO
 if ((self as Quest) as cwfortsiegemissionscript).SpecialNonFortSiege == 0 && ((self as Quest) as cwfortsiegemissionscript).SpecialCapitalResolutionFortSiege == 0
 	((self as Quest) as cwfortsiegemissionscript).FlagFieldCOWithMissionResultFaction(99, true)
@@ -1673,6 +1662,11 @@ CWFortSiegeScript kmyQuest = __temp as CWFortSiegeScript
 ;BEGIN CODE
 ; CWScript.Log("CWFortSiege", "Stage 9999: Shutdown phase.")
 
+if game.GetPlayer().IsInFaction(kmyQuest.CWOMission05Faction)
+	game.GetPlayer().removefromFaction(kmyQuest.CWOMission05Faction)
+	kmyQuest.CWs.CWMission05.Stop()
+endIf
+
 if ((self as Quest) as cwfortsiegemissionscript).SpecialNonFortSiege == 0 && ((self as Quest) as cwfortsiegemissionscript).SpecialCapitalResolutionFortSiege == 0
 	((self as Quest) as cwfortsiegemissionscript).ProcessFieldCOFactionsOnQuestShutDown()
 endIf
@@ -1683,6 +1677,12 @@ kmyQuest.CWs.CWThreatCombatBarksS.RegisterBattlePhaseChanged()
 CWScript.Log("CWFortSiege", "Stage 9999: temporarily enabling map markers until I have a function to turn off fast travel or move the marker that you fast travel to")
 ; debug.trace("TEMP: Enabling Map marker, until I can disable/enable fast travel or move heading marker.")
 Alias_MapMarker.GetReference().enable(false)
+
+;schofida - reset crime on Stormcloaks/imperials so you are not attacked by soldiers when you are back at tent
+kmyQuest.CWs.CrimeFactionImperial.SetCrimeGold(0)
+kmyQuest.CWs.CrimeFactionImperial.SetCrimeGoldViolent(0)
+kmyQuest.CWs.CrimeFactionSons.SetCrimeGold(0)
+kmyQuest.CWs.CrimeFactionSons.SetCrimeGoldViolent(0)
 
 while game.GetPlayer().IsInLocation(Alias_Fort.GetLocation())
 	utility.wait(5 as Float)
@@ -1722,12 +1722,6 @@ else	 ;its a normal fort battle
 	CWScript.Log("CWFortSiege", "Stage 9999 (shutdown phase): setting owner of fort based on who is")
 	kmyQuest.SetNewOwnerOfFort(1000, 2000)
 endIf
-
-;schofida - reset crime on Stormcloaks/imperials so you are not attacked by soldiers when you are back at tent
-kmyQuest.CWs.CrimeFactionImperial.SetCrimeGold(0)
-kmyQuest.CWs.CrimeFactionImperial.SetCrimeGoldViolent(0)
-kmyQuest.CWs.CrimeFactionSons.SetCrimeGold(0)
-kmyQuest.CWs.CrimeFactionSons.SetCrimeGoldViolent(0)
 
 CWScript.Log("CWFortSiege", "Stage 9999 (shutdown phase): removing aliases from CWSurrentTemporaryAllies faction")
 ;make them temporarily allies
