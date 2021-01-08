@@ -1762,6 +1762,11 @@ ReferenceAlias Property Alias_CWODragon2 Auto
 ReferenceAlias Property Alias_SmokeMarker Auto
 ;END ALIAS PROPERTY
 
+;BEGIN ALIAS PROPERTY CWODistantEntranceMarker
+;ALIAS PROPERTY TYPE ReferenceAlias
+ReferenceAlias Property Alias_CWODistantEntranceMarker Auto
+;END ALIAS PROPERTY
+
 ;BEGIN FRAGMENT Fragment_6
 Function Fragment_6()
 ;BEGIN AUTOCAST TYPE CWSiegeScript
