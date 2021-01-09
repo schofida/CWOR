@@ -31,10 +31,14 @@ function Fragment_0()
 
 	Quest __temp = self as Quest
 	cwmission05script kmyQuest = __temp as cwmission05script
+	kmyQuest.CompleteAllObjectives()
 	kmyQuest.FlagFieldCOWithMissionResultFaction(5, false)
 	kmyQuest.CWs.registerMissionSuccess(Alias_Hold.GetLocation(), false)
 	self.UnregisterForUpdate()
 	self.stop()
+	if !kmyQuest.CWs.CWFortSiegeFort.IsRunning() || kmyQuest.CWs.CWFortSiegeFort.getstage() >= 1000
+		kmyQuest.CWs.CWOStartCapital(Alias_Hold.GetLocation())
+	endif
 endFunction
 
 function Fragment_6()
@@ -49,7 +53,9 @@ function Fragment_4()
 	Quest __temp = self as Quest
 	cwmission05script kmyQuest = __temp as cwmission05script
 	kmyQuest.objectiveCompleted = 1
-	self.setStage(200)
+	kmyQuest.SetObjectiveCompleted(10, true)
+	kmyQuest.SetObjectiveDisplayed(100, true)
+	kmyQuest.registerforsingleupdate(5.0)
 endFunction
 
 ; Skipped compiler generated GotoState
@@ -65,6 +71,42 @@ function Fragment_8()
 	int aliasAllegiance = kmyQuest.CWs.GetActorAllgeiance(Alias_EnemyFieldCO.GetActorReference())
 	Actor FieldCOHQ = kmyQuest.CWs.GetAliasHQFieldCOForHold(currentHold, aliasAllegiance).GetActorReference()
 	Actor FieldCOCamp = kmyQuest.CWs.GetAliasCampFieldCOForHold(currentHold, aliasAllegiance).GetActorReference()
+
+	int hold = kmyQuest.CWs.CWOCurrentHold.GetValueInt()
+
+	if kmyQuest.CWs.PlayerAllegiance == kmyQuest.CWs.iImperials
+		if hold == 9
+			kmyQuest.CWGarrisonEnableMarkerSonsCampRift.Enable(false)
+		elseif hold == 7
+			kmyQuest.CWGarrisonEnableMarkerSonsCampWinterhold.Enable(false)
+		elseif hold == 6
+			kmyQuest.CWGarrisonEnableMarkerSonsCampPale.Enable(false)
+		elseif hold == 5
+			kmyQuest.CWGarrisonEnableMarkerSonsCampFalkreath.Enable(false)
+		elseif hold == 4
+			kmyQuest.CWGarrisonEnableMarkerSonsCampWhiterun.Enable(false)
+		elseif hold == 3
+			kmyQuest.CWGarrisonEnableMarkerSonsCampHjaalmarch.Enable(false)
+		elseif hold == 2
+			kmyQuest.CWGarrisonEnableMarkerSonsCampReach.Enable(false)
+		Endif
+	Elseif  kmyQuest.CWs.PlayerAllegiance == kmyQuest.CWs.iSons
+		if hold == 9
+			kmyQuest.CWGarrisonEnableMarkerImperialCampRift.Enable(false)
+		elseif hold == 7
+			kmyQuest.CWGarrisonEnableMarkerImperialCampWinterhold.Enable(false)
+		elseif hold == 6
+			kmyQuest.CWGarrisonEnableMarkerImperialCampPale.Enable(false)
+		elseif hold == 5
+			kmyQuest.CWGarrisonEnableMarkerImperialCampFalkreath.Enable(false)
+		elseif hold == 4
+			kmyQuest.CWGarrisonEnableMarkerImperialCampWhiterun.Enable(false)
+		elseif hold == 3
+			kmyQuest.CWGarrisonEnableMarkerImperialCampHjaalmarch.Enable(false)
+		elseif hold == 2
+			kmyQuest.CWGarrisonEnableMarkerImperialCampReach.Enable(false)
+		Endif
+	endif
 
 	FieldCOHQ.Enable(false)
 	FieldCOCamp.Enable(false)
