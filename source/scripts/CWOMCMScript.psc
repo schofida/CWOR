@@ -38,40 +38,45 @@ globalvariable property CWODisguiseGameType auto
 globalvariable property CWOVersion auto
 globalvariable property CWOTroopPoolGameType auto
 globalvariable property CWOSiChance auto
+quest property CWAttackCity Auto
 
 ;-- Variables ---------------------------------------
+Int _color = 16777215
+Int _colorOID_C
+Int _myKey = -1
+Int _keymapOID_K
 Int optionsStartSiege
 Int optionsReinforcementsBaseCity
-Float DramaMamaSecondaryPercent
 Int optionsPartyCrashersChance
-Float DramaMamaDragonSecondaryPercent
 Int optionsWinSiege
-Float DramaMamaSneakPercent
-Float DramaMamaBasePercent
 Int optionsReinforcementsBaseFort
-String[] holdsList
-Bool optionWinWarToggle = false
-Int _color = 16777215
 Int optionsReinforcementsBaseCapital
 Int optionsCWReset
 Int optionsMMScoreStormcloaks
-Int _colorOID_C
 Int optionsMMScoreImperials
-Int _myKey = -1
-Int _keymapOID_K
-Float DramaMamaMagicNoCombatPercent
 Int optionsWinWar
-Float DramaMamaMagicPercent
-Float _sliderPercent = 100.000
-Bool optionsCWResetToggle = false
-bool SetReinforcementsBusy = False
+Int optionsWinHold
 Int optionsBAChance
 int optionsDisguiseGameType
 int optionsTroopPoolGameType
 int optionsSIChance
 
+Float DramaMamaSecondaryPercent
+Float DramaMamaDragonSecondaryPercent
+Float DramaMamaSneakPercent
+Float DramaMamaBasePercent
+Float DramaMamaMagicPercent
+Float _sliderPercent = 100.000
+Float DramaMamaMagicNoCombatPercent
+
+Bool optionWinWarToggle = false
+Bool optionsCWResetToggle = false
+bool SetReinforcementsBusy = False
+bool optionsToggleCWWinBattle = false
+
 String[] gameDisguiseList
 String[] gameTroopPoolList
+String[] holdsList
 ;-- Functions ---------------------------------------
 
 function SetReinforcements()
@@ -168,6 +173,41 @@ function OnOptionSelect(Int a_option)
 		else
 			CWs.CWOStormcloaksWin()
 		endIf
+	elseIf a_option == optionsWinSiege
+		optionsToggleCWWinBattle = !optionsToggleCWWinBattle
+		self.SetToggleOptionValue(a_option, optionsToggleCWWinBattle, false)
+		if CWMission03.IsRunning()
+			CWMission03.SetStage(200)
+		endIf
+		if CWMission04.IsRunning()
+			CWMission04.SetStage(200)
+		endIf
+		if CWMission05.IsRunning()
+			CWMission05.SetStage(200)
+		endIf
+		if CWMission07.IsRunning()
+			CWMission07.SetStage(200)
+		endIf
+		if CWS.CWSiegeS.IsRunning() && CWS.CWSiegeS.GetStage() < 50 && CWS.CWOStillABetterEndingGlobal.GetValue() as Int < 1 ;schofida - siege and capital are both running in final siege. Have capital take care of it
+			if CWS.IsPlayerAttacking(CWS.CWSiegeS.City.GetLocation())
+				CWS.CWSiegeS.Setstage(50)
+				CWAttackCity.Setstage(50)
+			else
+				CWS.CWSiegeS.Setstage(200)
+			endIf
+		elseIf CWS.CWFortSiegeCapital.IsRunning() && CWS.CWFortSiegeCapital.GetStage() < 1000
+			if CWS.IsPlayerAttacking((CWS.CWFortSiegeCapital as CWFortSiegeScript).Fort.GetLocation())
+				CWS.CWFortSiegeCapital.Setstage(1000)
+			else
+				CWS.CWFortSiegeCapital.Setstage(2000)
+			endIf
+		elseIf CWS.CWFortSiegeFort.IsRunning() && CWS.CWFortSiegeFort.GetStage() < 950
+			if CWS.IsPlayerAttacking((CWS.CWFortSiegeFort as CWFortSiegeScript).Fort.GetLocation())
+				CWS.CWFortSiegeFort.Setstage(1000)
+			else
+				CWS.CWFortSiegeFort.Setstage(2000)
+			endIf
+		endIf
 	elseIf a_option == optionsCWReset
 		optionsCWResetToggle = !optionsCWResetToggle
 		self.SetToggleOptionValue(a_option, optionsCWResetToggle, false)
@@ -230,11 +270,17 @@ function OnOptionColorOpen(Int a_option)
 	endIf
 endFunction
 
+event OnConfigClose()
+	optionWinWarToggle = false
+	optionsCWResetToggle = false
+	SetReinforcementsBusy = False
+	optionsToggleCWWinBattle = false
+endevent
+
 function OnPageReset(String a_page)
 {Called when a new page is selected, including the initial empty page}
-
 	if a_page == "CWO Debug"
-		self.SetCursorFillMode(self.TOP_TO_BOTTOM)
+		SetCursorFillMode(self.LEFT_TO_RIGHT)
 		if CW.IsRunning()
 			self.AddtextOption("Main CW Quest", "Is On Stage " + CW.Getstage() as String, 0)
 		endIf
@@ -285,6 +331,9 @@ function OnPageReset(String a_page)
 		if CWFortSiegeCapital.IsRunning()
 			self.AddtextOption("Capital Siege Quest", "Is On Stage " + CWFortSiegeCapital.Getstage() as String, 0)
 		endIf
+		if cws.CWOStillABetterEndingMonitor.IsRunning()
+			AddtextOption("Player Bleedout Monitor", "Is On", 0)
+		endif
 		if CWOStillABetterEndingGlobal.GetValue() > 0 as Float
 			self.AddtextOption("STILL A BETTER ENDING THAN MASS EFFECT 3", "Is On", 0)
 		endIf
@@ -322,14 +371,14 @@ function OnPageReset(String a_page)
 		self.AddtextOption("CWPercentPoolRemainingAttacker is at", CWPercentPoolRemainingAttacker.GetValueInt() as String, 0)
 		self.AddtextOption("CWPercentPoolRemainingDefender is at", CWPercentPoolRemainingDefender.GetValueInt() as String, 0)
 		self.AddtextOption("Haafingar is owned by the", CWs.FactionName(CWs.GetHoldOwner(1)), 0)
-		self.AddtextOption("The Reach is owned by the", CWs.FactionName(CWs.GetHoldOwner(2)), 0)
 		self.AddtextOption("Hjaalmarch is owned by the", CWs.FactionName(CWs.GetHoldOwner(3)), 0)
-		self.AddtextOption("Whiterun is owned by the", CWs.FactionName(CWs.GetHoldOwner(4)), 0)
+		self.AddtextOption("The Reach is owned by the", CWs.FactionName(CWs.GetHoldOwner(2)), 0)
 		self.AddtextOption("Falkreath is owned by the", CWs.FactionName(CWs.GetHoldOwner(5)), 0)
+		self.AddtextOption("Whiterun is owned by the", CWs.FactionName(CWs.GetHoldOwner(4)), 0)
 		self.AddtextOption("The Pale is owned by the", CWs.FactionName(CWs.GetHoldOwner(6)), 0)
+		self.AddtextOption("The Rift is owned by the", CWs.FactionName(CWs.GetHoldOwner(9)), 0)
 		self.AddtextOption("Winterhold is owned by the", CWs.FactionName(CWs.GetHoldOwner(7)), 0)
 		self.AddtextOption("Eastmarch is owned by the", CWs.FactionName(CWs.GetHoldOwner(8)), 0)
-		self.AddtextOption("The Rift is owned by the", CWs.FactionName(CWs.GetHoldOwner(9)), 0)
 	elseIf a_page == "CWO Options"
 		self.SetCursorFillMode(self.LEFT_TO_RIGHT)
 		optionsReinforcementsBaseCapital = self.AddSlideroption("Capital Reinforcements Base", CWOCapitalReinforcements.GetValueInt() as Float, "{0}", 0)
@@ -341,9 +390,10 @@ function OnPageReset(String a_page)
 		optionsPartyCrashersChance = self.AddSlideroption("PARTY CRASHERS chance", CWOPCChance.GetValueInt() as Float, "{0}%", 0)
 		optionsBAChance = self.AddSlideroption("Benedict Arnold Spies Chance", CWOBAChance.GetValueInt() as Float, "{0}%", 0)
 		optionsSiChance = self.AddSlideroption("Spanish Inquisition Chance", CWOSiChance.GetValueInt() as Float, "{0}%", 0)
-		optionsStartSiege = self.AddMenuOption("Force start siege here:", " ", 0)
-		optionsWinSiege = self.AddMenuOption("Win this capital's hold:", " ", OPTION_FLAG_DISABLED)
 		optionsDisguiseGameType = self.AddMenuOption("Disguise Mechanic:", " ", 0)
+		optionsStartSiege = self.AddMenuOption("Force start siege here:", " ", 0)
+		optionsWinSiege = self.AddToggleOption("Win running siege:", optionsToggleCWWinBattle, 0)
+		optionsWinHold = self.AddMenuOption("Win hold here:", " ", 0)
 		optionsWinWar = self.AddToggleOption("Win the war", optionWinWarToggle, 0)
 		optionsCWReset = self.AddToggleOption("Reset major initial variables", optionsCWResetToggle, OPTION_FLAG_DISABLED)
 
@@ -400,7 +450,7 @@ function OnOptionMenuOpen(Int a_option)
 		self.SetMenuDialogStartIndex(0)
 		self.SetMenuDialogDefaultIndex(0)
 		self.SetMenuDialogOptions(holdsList)
-	elseIf a_option == optionsWinSiege
+	elseif a_option == optionsWinHold
 		self.SetMenuDialogStartIndex(0)
 		self.SetMenuDialogDefaultIndex(0)
 		self.SetMenuDialogOptions(holdsList)
@@ -420,6 +470,30 @@ function OnOptionMenuAccept(Int a_option, Int a_index)
 
 	if a_option == optionsStartSiege
 		CWOCurrentHold.SetValueInt(a_index + 1)
+		if CWMission03.IsRunning()
+			CWMission03.SetStage(200)
+			Utility.wait(3)
+		endIf
+		if CWMission04.IsRunning()
+			CWMission04.SetStage(200)
+			Utility.wait(3)
+		endIf
+		if CWMission05.IsRunning()
+			CWMission05.SetStage(200)
+			Utility.wait(3)
+		endIf
+		if CWMission07.IsRunning()
+			CWMission07.SetStage(200)
+			Utility.wait(3)
+		endIf
+		If CWS.CWFortSiegeFort.IsRunning() && CWS.CWFortSiegeFort.GetStage() < 950
+			if CWS.IsPlayerAttacking((CWS.CWFortSiegeFort as CWFortSiegeScript).Fort.GetLocation())
+				CWS.CWFortSiegeFort.Setstage(1000)
+			else
+				CWS.CWFortSiegeFort.Setstage(2000)
+			endIf
+			Utility.wait(6)
+		endIf
 		CWs.CWOStartCapital(CWs.GetLocationForHold(a_index + 1))
 		Utility.Wait(6)
 		if (a_index + 1) as Bool == (1 as Bool || 2 as Bool || 4 as Bool || 8 as Bool || 9 as Bool)
@@ -427,11 +501,9 @@ function OnOptionMenuAccept(Int a_option, Int a_index)
 		else
 			CWs.CWFortSiegeCapital.Setstage(10)
 		endIf
-	elseIf a_option == optionsWinSiege
-		if CWs.GetOwner(CWs.GetLocationForHold(a_index + 1)) == CWs.PlayerAllegiance
-			CWs.WinholdOffScreenIfNotdoingCapitalBattles(CWs.GetLocationForHold(a_index + 1), false, true)
-		else
-			CWs.WinholdOffScreenIfNotdoingCapitalBattles(CWs.GetLocationForHold(a_index + 1), true, false)
+	elseIf a_option == optionsWinHold
+		if CWs.GetHoldOwner(a_index + 1) != CWs.PlayerAllegiance
+			CWs.WinHoldOffScreenIfNotDoingCapitalBattles(CWs.GetLocationForHold(a_index + 1), true, false)
 		endIf
 	elseif a_option == optionsDisguiseGameType
 		CWODisguiseGameType.SetValueInt(a_index)
@@ -475,6 +547,12 @@ function OnOptionHighlight(Int a_option)
 		self.SetInfoText("Sets how many troops are at your disposal. As troops die, another will take their place until yours or your opponents reserves run out. If you run out, you lose. Default=Utilizes MURDERMAYHEM scores. Typically winning more battles nets more troops. Alternate=Advantage goes to the side on the defense. Even=No adjustments. Both sides get same troops (with a little randomness thrown in).")
 	elseif a_option == optionsSIChance
 		self.SetInfoText("Sets the Spanish Inquisition chance. CWO will periodically poll and may start a defense quest if you are in a city your side controls.")
+	elseif a_option == optionsStartSiege
+		self.SetInfoText("Starts a city siege of your choice. Use this if you are stuck at a camp and the field officer is not giving you the next quest. Please close MCM after selecting.")
+	elseif a_option == optionsWinSiege
+		self.SetInfoText("Wins a fort or major/minor capital siege already in progress. Use this if the siege did not finish for some reason. Please do not use this at the battle of Solitude or Windhelm. Please close MCM after selecting.")
+	elseif a_option == optionsWinHold
+		self.SetInfoText("EXPERIMENTAL: Wins a hold of your choice. Use this if the commander is not giving you the quest for the next hold. The dialogue conditions are pretty strict and sometimes (mod conflict maybe?) you are not gaining the hold in the proper order. Check the holds on the debug page to see the orders of hold conquests. Imperials go down; Stormcloaks go up. Please close MCM after selecting.")
 	endIf
 endFunction
 
