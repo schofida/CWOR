@@ -46,6 +46,14 @@ function DoPlayerLoadGameStuff()
 		endif
 		CWOVersion.SetValueInt(304)
 	endif
+	if CWOVersion.GetValueInt() < 405
+		if CWs.CWOStilABetterEndingMonitor.IsRunning()
+			CWs.CWOStilABetterEndingMonitor.Stop()
+			utility.Wait(3.0)
+			CWs.CWOStilABetterEndingMonitor.Start()
+		endif
+		CWOVersion.SetValueInt(405)
+	endif
 endfunction
 
 ; Skipped compiler generated GetState
