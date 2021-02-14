@@ -164,6 +164,7 @@ function Fragment_12()
 	Quest __temp = self as Quest
 	cwmission07script kmyQuest = __temp as cwmission07script
 	(Alias_Steward as cwmission07stewardscript).MonitorPlayerDistance(false)
+	Alias_Friend.TryToEnable()
 	Alias_Friend.TryToMoveTo(Alias_CaravanFriendMarker.GetReference())
 	Alias_CaravanToggle.TryToEnable()
 	self.setObjectiveCompleted(30, true)
