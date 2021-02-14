@@ -40,7 +40,7 @@ Event OnCellAttach()
 		
 	EndIf
 
-	if  RikkeOrGalmar && !CW.CWMission03.IsRunning() && !CW.CWMission04.IsRunning() && !CW.CWMission07.IsRunning() && (!CW.CWFortSiegeFort.IsRunning() || CW.CWFortSiegeFort.getstage() >= 1000) ; reddit bugfix #7
+	if  RikkeOrGalmar && !CW.CWMission03.IsRunning() && !CW.CWMission04.IsRunning() && !CW.CWMission07.IsRunning() && (!CW.CWFortSiegeFort.IsRunning() || CW.CWFortSiegeFort.getstage() >= 1000) && !CW.CWFortSiegeCapital.IsRunning() && !CW.CWSiege.IsRunning() ; reddit bugfix #7
 
 		if RikkeOrGalmar.GetCurrentLocation() == myLocation || myEnableMarker.IsDisabled() == true
 			myLinkedFieldCO.disable()
